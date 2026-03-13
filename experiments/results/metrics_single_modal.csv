@@ -1,0 +1,2 @@
+precision,recall,f1_score,accuracy,false_alert_rate,detection_latency_sec,fps_performance
+0.75,0.4,0.5217,0.3529,0.1176,0.24,30.0

@@ -1,0 +1,151 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: exam_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: exam_proctoring
+      MYSQL_USER: examuser
+      MYSQL_PASSWORD: exampass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - exam_network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: exam_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - exam_network
+
+  # Backend API Gateway
+  backend:
+    build: ./backend
+    container_name: exam_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_USER=examuser
+      - DB_PASSWORD=exampass
+      - DB_NAME=exam_proctoring
+      - REDIS_HOST=redis
+      - JWT_SECRET=your-super-secret-jwt-key
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - exam_network
+
+  # Face Recognition AI Service
+  face_service:
+    build: ./ai_services/face_recognition
+    container_name: exam_face_service
+    ports:
+      - "8001:8000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=examuser
+      - DB_PASSWORD=exampass
+      - DB_NAME=exam_proctoring
+    depends_on:
+      - mysql
+    volumes:
+      - ./ai_services/face_recognition:/app
+      - ./models:/app/models
+    networks:
+      - exam_network
+
+  # Object Detection AI Service
+  object_service:
+    build: ./ai_services/object_detection
+    container_name: exam_object_service
+    ports:
+      - "8002:8000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=examuser
+      - DB_PASSWORD=exampass
+      - DB_NAME=exam_proctoring
+    depends_on:
+      - mysql
+    volumes:
+      - ./ai_services/object_detection:/app
+      - ./models:/app/models
+    networks:
+      - exam_network
+
+  # Audio Analysis AI Service
+  audio_service:
+    build: ./ai_services/audio_analysis
+    container_name: exam_audio_service
+    ports:
+      - "8003:8000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=examuser
+      - DB_PASSWORD=exampass
+      - DB_NAME=exam_proctoring
+    depends_on:
+      - mysql
+    volumes:
+      - ./ai_services/audio_analysis:/app
+      - ./models:/app/models
+    networks:
+      - exam_network
+
+  # Behavioral Analysis AI Service
+  behavior_service:
+    build: ./ai_services/behavioral_analysis
+    container_name: exam_behavior_service
+    ports:
+      - "8004:8000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=examuser
+      - DB_PASSWORD=exampass
+      - DB_NAME=exam_proctoring
+    depends_on:
+      - mysql
+    volumes:
+      - ./ai_services/behavioral_analysis:/app
+      - ./models:/app/models
+    networks:
+      - exam_network
+
+  # Frontend React App
+  frontend:
+    build: ./frontend
+    container_name: exam_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+      - REACT_APP_WS_URL=ws://localhost:5000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - exam_network
+
+volumes:
+  mysql_data:
+
+networks:
+  exam_network:
+    driver: bridge

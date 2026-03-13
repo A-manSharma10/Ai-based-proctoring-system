@@ -1,0 +1,117 @@
+[
+    {
+        "id": "session_001_normal",
+        "video_path": "dataset/videos/session1.mp4",
+        "audio_path": "dataset/audio/session1.wav",
+        "ground_truth": []
+    },
+    {
+        "id": "session_002_phone",
+        "video_path": "dataset/videos/session2.mp4",
+        "audio_path": "dataset/audio/session2.wav",
+        "ground_truth": [
+            {
+                "type": "phone_usage",
+                "timestamp": 10.5
+            },
+            {
+                "type": "phone_usage",
+                "timestamp": 45.0
+            }
+        ]
+    },
+    {
+        "id": "session_003_audio_only",
+        "video_path": "dataset/videos/session3.mp4",
+        "audio_path": "dataset/audio/session3.wav",
+        "ground_truth": [
+            {
+                "type": "talking",
+                "timestamp": 12.0
+            },
+            {
+                "type": "background_noise",
+                "timestamp": 31.0
+            }
+        ]
+    },
+    {
+        "id": "session_004_gaze_issue",
+        "video_path": "dataset/videos/session4.mp4",
+        "audio_path": "dataset/audio/session4.wav",
+        "ground_truth": [
+            {
+                "type": "gaze_deviation",
+                "timestamp": 20.0
+            },
+            {
+                "type": "gaze_deviation",
+                "timestamp": 55.0
+            }
+        ]
+    },
+    {
+        "id": "session_005_multiple_faces",
+        "video_path": "dataset/videos/session5.mp4",
+        "audio_path": "dataset/audio/session5.wav",
+        "ground_truth": [
+            {
+                "type": "multiple_persons",
+                "timestamp": 15.0
+            },
+            {
+                "type": "talking",
+                "timestamp": 16.0
+            }
+        ]
+    },
+    {
+        "id": "session_006_no_face_away",
+        "video_path": "dataset/videos/session6.mp4",
+        "audio_path": "dataset/audio/session6.wav",
+        "ground_truth": [
+            {
+                "type": "no_face",
+                "timestamp": 35.0
+            },
+            {
+                "type": "no_face",
+                "timestamp": 85.0
+            }
+        ]
+    },
+    {
+        "id": "session_007_complex_cheating",
+        "video_path": "dataset/videos/session7.mp4",
+        "audio_path": "dataset/audio/session7.wav",
+        "ground_truth": [
+            {
+                "type": "phone_usage",
+                "timestamp": 22.0
+            },
+            {
+                "type": "gaze_deviation",
+                "timestamp": 25.0
+            },
+            {
+                "type": "talking",
+                "timestamp": 26.0
+            },
+            {
+                "type": "gaze_deviation",
+                "timestamp": 45.0
+            }
+        ]
+    },
+    {
+        "id": "session_008_impersonation",
+        "video_path": "dataset/videos/session8.mp4",
+        "audio_path": "dataset/audio/session8.wav",
+        "ground_truth": [
+            {
+                "type": "unauthorized_user",
+                "timestamp": 5.0
+            }
+        ]
+    }
+]
