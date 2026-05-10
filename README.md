@@ -1,5 +1,7 @@
 # AI-Based Online Exam Proctoring System
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 ## Overview
 A comprehensive AI-powered online exam proctoring platform that uses computer vision, audio analysis, and behavioral monitoring to ensure exam integrity while maintaining student privacy. The system seamlessly integrates real-time monitoring, an automated violation detection pipeline, and supervisor controls. 
 
@@ -47,46 +49,50 @@ The architecture relies on a microservices design with real-time WebSocket commu
 - **Exam Termination Logic**: Strict rules that auto-terminate exams upon reaching the maximum defined threshold of warnings.
 - **Integrity Scoring**: Generates an automated trust score summarizing user behavior during the session.
 
-## Installation Instructions
+## Getting Started
 
-1. **Prerequisites**
-   - Node.js (v18+)
-   - Python (v3.9+)
-   - Docker and Docker Compose (highly recommended)
+### 1. Prerequisites
+- **Docker and Docker Compose** (Highly Recommended)
+- Node.js (v18+) and Python (v3.9+) (Only required for manual setup)
 
-2. **Clone the repository**
-   ```bash
-   git clone https://github.com/A-manSharma10/Ai-based-proctoring-system
-   cd Ai-based-proctoring-system
-   ```
-
-3. **Install Dependencies**
-   - Head into the `backend/` directory: `npm install`
-   - Head into the `frontend/` directory: `npm install`
-   - Head into `ai_services/` modules: `pip install -r requirements.txt`
+### 2. Clone the repository
+```bash
+git clone https://github.com/A-manSharma10/Ai-based-proctoring-system
+cd Ai-based-proctoring-system
+```
 
 ## How to Run the System
 
-**Method 1: Using Docker (Recommended)**
+### Method 1: Using Docker (Recommended)
 The simplest way to run the entire stack (Frontend, Backend, AI Microservices, and Databases) is using Docker Compose:
 
 ```bash
 docker-compose up --build
 ```
-The frontend will be accessible at `http://localhost:3000`.
+Once the containers are running, the application will be accessible at:
+- **Frontend**: `http://localhost:3000`
+- **Backend API**: `http://localhost:5000`
 
-**Method 2: Manual Startup**
-1. **Start the Backend:**
+### Method 2: Manual Local Startup
+If you prefer to run the services without Docker, you will need to install the dependencies and start manually:
+
+1. **Install Dependencies:**
+   - Backend: `cd backend && npm install`
+   - Frontend: `cd frontend && npm install`
+   - AI Services: `cd ai_services && pip install -r requirements.txt`
+
+2. **Start the Backend:**
    ```bash
    cd backend
    npm run dev
    ```
-2. **Start the Frontend:**
+
+3. **Start the Frontend:**
    ```bash
    cd frontend
    npm start
    ```
-The frontend will be available at `http://localhost:3000`. (Ensure databases and AI microservices are running locally)
+*(Note: For the manual setup to work fully, ensure your local MySQL/Redis databases and the individual Python AI microservices are running on their respective ports.)*
 
 ## How to Run Experiments
 
@@ -122,13 +128,12 @@ To test the system functionality locally:
 
 ## Screenshots
 
-*Example snapshots showing the Live Monitoring Dashboard and the Report Center.*
+*Example snapshots showcasing the system capabilities.*
 - **Accuracy Comparison**: `experiments/results/accuracy_comparison.png`
 - **False Alert Rate Chart**: `experiments/results/false_alert_rate.png`
-*(Screenshots are stored locally but will represent the full UI in documentation.)*
 
 ## Future Improvements
 
 - **Cloud Deployment Optimization**: Migrate AI inference models directly to AWS SageMaker/Azure ML for better horizontal scaling.
 - **Advanced Action Recognition**: Enhance the behavioral AI block with skeleton tracking to identify highly specific cheating actions.
-- **Offline Integrity**: Implement local caching of events for students experiencing brief network disconnects, syncing securely upon reconnection. 
+- **Offline Integrity**: Implement local caching of events for students experiencing brief network disconnects, syncing securely upon reconnection.
