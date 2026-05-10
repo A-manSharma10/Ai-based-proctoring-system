@@ -67,11 +67,13 @@ The architecture relies on a microservices design with real-time WebSocket commu
 
 ## How to Run the System
 
-**Method 1: Using the Batch Script (Windows)**
-Simply run the included batch script from the root director to start both the Frontend and Backend concurrently:
+**Method 1: Using Docker (Recommended)**
+The simplest way to run the entire stack (Frontend, Backend, AI Microservices, and Databases) is using Docker Compose:
+
 ```bash
-run_proctoring_system.bat
+docker-compose up --build
 ```
+The frontend will be accessible at `http://localhost:3000`.
 
 **Method 2: Manual Startup**
 1. **Start the Backend:**
@@ -84,7 +86,7 @@ run_proctoring_system.bat
    cd frontend
    npm start
    ```
-The frontend will be available at `http://localhost:3000`.
+The frontend will be available at `http://localhost:3000`. (Ensure databases and AI microservices are running locally)
 
 ## How to Run Experiments
 
@@ -111,7 +113,7 @@ Our research demonstrates significant improvements when replacing a standard Sin
 ## Demo Instructions
 
 To test the system functionality locally:
-1. Start the application (`run_proctoring_system.bat`).
+1. Start the application using Docker (`docker-compose up`).
 2. Open two browser windows:
    - **Student Login**: `student1@exam.com` / `password`
    - **Supervisor Login**: `supervisor@exam.com` / `password`
