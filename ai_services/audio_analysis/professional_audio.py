@@ -1,11 +1,6 @@
 """
-Professional-Grade Audio Detection
-Implements commercial-level accuracy with:
-- Advanced speech detection
-- Multiple speaker identification
-- Whisper detection
-- Noise filtering (fan, keyboard, ambient)
-- Voice energy threshold
+Audio Analysis Module
+Handles speech detection, speaker count estimation, and noise filtering for proctoring.
 """
 
 import numpy as np
@@ -18,9 +13,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ProfessionalAudioAnalyzer:
+class AudioAnalyzer:
     """
-    Professional audio analyzer with advanced speech and speaker detection.
+    Audio analyzer for speech presence and speaker count identification.
     """
     
     def __init__(self,
@@ -29,7 +24,7 @@ class ProfessionalAudioAnalyzer:
                  noise_baseline_samples: int = 15,
                  sample_rate: int = 16000):
         """
-        Initialize professional audio analyzer.
+        Initialize audio analyzer parameters.
         
         Args:
             window_duration: Duration of analysis window in seconds
@@ -284,7 +279,7 @@ class ProfessionalAudioAnalyzer:
     
     def analyze_audio(self, audio: np.ndarray, timestamp: Optional[float] = None) -> Dict[str, Any]:
         """
-        Analyze audio with professional accuracy.
+        Analyze audio frame for speech and violations.
         
         Args:
             audio: Audio signal

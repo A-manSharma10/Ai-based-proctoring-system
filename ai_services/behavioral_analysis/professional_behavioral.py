@@ -8,9 +8,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class ProfessionalBehavioralAnalyzer:
+class BehavioralAnalyzer:
     """
-    Professional Behavioral Analysis System for Exam Proctoring.
+    Behavioral Analysis System for monitoring student movement and posture.
     Tracks body pose, hand gestures, and temporal movement patterns.
     """
     

@@ -6,6 +6,7 @@ import {
   Maximize, Minimize, AlertTriangle, Eye, Phone,
   Users, Volume2, Clock, LogOut, Activity
 } from 'lucide-react';
+import { useSocket } from '../contexts/SocketContext';
 import ViolationPopup from './ViolationPopup';
 
 const EnhancedExamSession = () => {

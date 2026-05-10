@@ -1,11 +1,6 @@
 """
-Professional-Grade Face Detection and Tracking
-Implements commercial-level accuracy with:
-- Continuous face tracking
-- Multi-face detection with stability
-- Side profile detection
-- Low-light performance
-- Embedding verification
+Face Detection and Tracking Module
+Handles continuous tracking, multi-face detection, and profile analysis using MediaPipe.
 """
 
 import cv2
@@ -19,18 +14,18 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ProfessionalFaceDetector:
+class FaceDetector:
     """
-    Professional face detector with continuous tracking and high accuracy.
+    Robust face detector with continuous tracking.
     """
     
     def __init__(self,
                  no_face_threshold: float = 3.0,
                  multiple_face_threshold: float = 1.0,
-                 min_detection_confidence: float = 0.7,
-                 min_tracking_confidence: float = 0.6):
+                 min_detection_confidence: float = 0.4,
+                 min_tracking_confidence: float = 0.4):
         """
-        Initialize professional face detector.
+        Initialize face detector parameters.
         
         Args:
             no_face_threshold: Seconds before flagging no face
@@ -45,19 +40,19 @@ class ProfessionalFaceDetector:
         self.mp_face_detection = mp.solutions.face_detection
         self.mp_face_mesh = mp.solutions.face_mesh
         
-        # Primary detector (high confidence)
+        # Primary detector
         self.face_detection = self.mp_face_detection.FaceDetection(
-            model_selection=1,  # Full range model (better for side profiles)
+            model_selection=1,
             min_detection_confidence=min_detection_confidence
         )
         
-        # Backup detector (lower confidence for difficult cases)
+        # Backup detector for low-confidence scenarios
         self.face_detection_backup = self.mp_face_detection.FaceDetection(
             model_selection=1,
             min_detection_confidence=0.5
         )
         
-        # Face mesh for detailed tracking
+        # Face landmarks for tracking
         self.face_mesh = self.mp_face_mesh.FaceMesh(
             static_image_mode=False,
             max_num_faces=5,
@@ -280,7 +275,7 @@ class ProfessionalFaceDetector:
     
     def detect_and_track(self, image: np.ndarray, timestamp: Optional[float] = None) -> Dict[str, Any]:
         """
-        Detect and track faces with professional accuracy.
+        Detect and track faces in a given frame.
         
         Args:
             image: Input BGR image
@@ -362,9 +357,19 @@ class ProfessionalFaceDetector:
         if faces:
             avg_confidence = np.mean([f['confidence'] for f in faces])
         
+        # Calculate face distance (normalized: 1.0 is standard laptop distance)
+        face_distance = 1.0
+        if faces:
+            h, w = image.shape[:2]
+            # Average face width relative to screen width
+            avg_width = np.mean([abs(f['bbox'][2] - f['bbox'][0]) for f in faces])
+            # Calibrated: ~15% width is around 60cm distance
+            face_distance = round(0.15 / (avg_width / w), 2) if avg_width > 0 else 1.0
+
         return {
             'face_detected': stable_face_count > 0,
             'face_count': stable_face_count,
+            'face_distance': face_distance,
             'raw_face_count': len(faces),
             'faces': faces,
             'tracked_faces': len(self.face_tracks),

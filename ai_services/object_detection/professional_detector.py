@@ -1,7 +1,6 @@
 """
-Professional-Grade Object Detection for Exam Proctoring
-Implements commercial-level accuracy with multi-scale detection, 
-data augmentation, and advanced tracking
+Object Detection Module for Proctoring
+Implements detection and tracking of prohibited items using YOLOv8.
 """
 
 import cv2
@@ -14,28 +13,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ProfessionalObjectDetector:
+class ObjectDetector:
     """
-    Professional-grade object detector with:
-    - Multi-scale detection for small objects
-    - Temporal smoothing across 10-15 frames
-    - Advanced NMS tuning
-    - Low-light enhancement
-    - Partial object detection
-    - Confidence averaging
+    Object detection engine with temporal smoothing and multi-scale analysis.
     """
     
     def __init__(self,
                  model,
-                 input_size: int = 960,  # Higher resolution for small objects
+                 input_size: int = 960,
                  frame_buffer_size: int = 15,
                  min_frames_for_detection: int = 8,
-                 confidence_threshold: float = 0.45,  # Lower for better recall
+                 confidence_threshold: float = 0.45,
                  nms_threshold: float = 0.4,
                  persistence_threshold: float = 2.0,
-                 small_object_threshold: float = 0.02):  # 2% of image area
+                 small_object_threshold: float = 0.02):
         """
-        Initialize professional detector.
+        Initialize detector parameters.
         
         Args:
             model: YOLO model instance
@@ -73,7 +66,8 @@ class ProfessionalObjectDetector:
             'tablet': ['tablet', 'ipad', 'kindle'],
             'smartwatch': ['watch', 'smartwatch', 'apple watch'],
             'headphones': ['headphones', 'earphones', 'earbuds', 'airpods'],
-            'calculator': ['calculator']
+            'calculator': ['calculator'],
+            'bottle': ['bottle', 'flask', 'beverage']
         }
         
     def enhance_low_light(self, image: np.ndarray) -> np.ndarray:
@@ -357,13 +351,6 @@ class ProfessionalObjectDetector:
     
     def detect_frame(self, image: np.ndarray, timestamp: Optional[float] = None) -> Dict[str, Any]:
         """
-        Detect objects in frame with professional-grade accuracy.
-        
-        Args:
-            image: Input BGR image
-            timestamp: Current timestamp
-            
-        Returns:
             Detection results with violations
         """
         if timestamp is None:

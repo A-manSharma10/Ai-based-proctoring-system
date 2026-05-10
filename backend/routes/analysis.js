@@ -54,7 +54,7 @@ router.post('/frame', async (req, res) => {
     const analysisPromises = [];
 
     if (process.env.USE_MOCK === 'true') {
-      logger.info('Using PROFESSIONAL MOCK AI Analysis');
+      logger.info('Using Simulated AI Analysis');
 
       // Default: No violations
       if (services.includes('face')) {
@@ -70,7 +70,7 @@ router.post('/frame', async (req, res) => {
       if (services.includes('object')) analysisResults.object = { detections: [], prohibited_objects: [] };
       if (services.includes('behavior')) analysisResults.behavior = { risk_score: 0.05, detected_behaviors: [] };
 
-      // Professional Mocking: Inject realistic violations 8% of the time
+      // Simulation: Inject violations 8% of the time for testing
       if (Math.random() > 0.92) {
         const rand = Math.random();
         if (rand > 0.75) {
@@ -213,10 +213,10 @@ router.post('/audio', async (req, res) => {
     // Audio analysis
     let analysisResult;
     if (process.env.USE_MOCK === 'true') {
-      logger.info('Using PROFESSIONAL MOCK Audio Analysis');
+      logger.info('Using Simulated Audio Analysis');
       analysisResult = { is_whisper: false, speaker_count: 1, confidence: 0.98 };
 
-      // Inject professional audio violations 10% of the time
+      // Simulation: Inject audio violations 10% of the time
       if (Math.random() > 0.9) {
         analysisResult.violation = {
           type: 'multiple_speakers',
@@ -348,8 +348,8 @@ function getSessionState(sessionId) {
       phoneFrames: 0,
       // Thresholds (number of consecutive frames, e.g. at 1 frame per 2s)
       thresholds: {
-        noFace: 2,       // ~4s
-        lookingAway: 2,  // ~4s
+        noFace: 1,       // ~2s (one analysis window)
+        lookingAway: 1,  // ~2s (one analysis window)
         multipleFaces: 1 // immediate
       },
       // Overall

@@ -14,16 +14,16 @@ import json
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-from professional_behavioral import ProfessionalBehavioralAnalyzer
+from professional_behavioral import BehavioralAnalyzer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Professional Behavioral Analysis Service", version="2.0.0")
+app = FastAPI(title="Behavioral Analysis Service", version="1.0.0")
 
-# Session-based professional analyzers
-session_analyzers: Dict[int, ProfessionalBehavioralAnalyzer] = {}
+# Session-based analyzers
+session_analyzers: Dict[int, BehavioralAnalyzer] = {}
 
 # Pydantic models
 class BehavioralAnalysisRequest(BaseModel):
@@ -63,14 +63,13 @@ def decode_base64_image(base64_string: str) -> np.ndarray:
 
 @app.post("/analyze", response_model=BehavioralAnalysisResponse)
 async def analyze_behavior(request: BehavioralAnalysisRequest):
-    """Analyze behavioral patterns with professional-grade accuracy"""
+    """Analyze behavioral patterns for potential violations"""
     try:
         start_time = time.time()
         session_id = request.session_id
         
-        # Get or create professional analyzer for this session
         if session_id not in session_analyzers:
-            session_analyzers[session_id] = ProfessionalBehavioralAnalyzer(
+            session_analyzers[session_id] = BehavioralAnalyzer(
                 history_size=30,
                 movement_threshold=0.05
             )

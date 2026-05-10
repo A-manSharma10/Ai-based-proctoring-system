@@ -1,11 +1,6 @@
 """
-Professional-Grade Gaze and Pupil Tracking
-Implements commercial-level accuracy with:
-- Precise iris landmark tracking (468-point model)
-- Head pose + eye vector combination
-- Blink rate monitoring
-- Natural behavior filtering
-- Configurable thresholds
+Gaze and Pupil Tracking Module
+Implements attention monitoring using iris landmarks and head pose estimation.
 """
 
 import cv2
@@ -19,17 +14,17 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ProfessionalGazeTracker:
+class GazeTracker:
     """
-    Professional gaze tracker with iris landmarks and head pose.
+    Gaze tracker utilizing iris landmarks and head orientation.
     """
     
     def __init__(self,
-                 looking_away_threshold: float = 5.0,
+                 looking_away_threshold: float = 2.0,
                  window_size: int = 50,
                  blink_detection: bool = True):
         """
-        Initialize professional gaze tracker.
+        Initialize gaze tracker parameters.
         
         Args:
             looking_away_threshold: Seconds before flagging
@@ -40,14 +35,14 @@ class ProfessionalGazeTracker:
         self.window_size = window_size
         self.blink_detection = blink_detection
         
-        # Initialize MediaPipe Face Mesh with iris
+        # Initialize Face Mesh for iris tracking
         self.mp_face_mesh = mp.solutions.face_mesh
         self.face_mesh = self.mp_face_mesh.FaceMesh(
             static_image_mode=False,
             max_num_faces=1,
-            refine_landmarks=True,  # Enables iris landmarks
-            min_detection_confidence=0.7,
-            min_tracking_confidence=0.6
+            refine_landmarks=True,
+            min_detection_confidence=0.4,
+            min_tracking_confidence=0.4
         )
         
         # Tracking state

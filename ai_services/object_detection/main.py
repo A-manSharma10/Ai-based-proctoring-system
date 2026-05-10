@@ -8,25 +8,25 @@ import time
 import logging
 from typing import List, Dict, Any, Optional
 import os
-from professional_detector import ProfessionalObjectDetector
+from professional_detector import ObjectDetector
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Professional Object Detection Service", version="2.0.0")
+app = FastAPI(title="Object Detection Service", version="1.0.0")
 
 # Initialize YOLO model
 try:
     # Use YOLOv8 small model for better accuracy than nano, but still fast
     model = YOLO('yolov8s.pt') 
-    logger.info("Professional YOLO model loaded successfully")
+    logger.info("YOLO model loaded successfully")
 except Exception as e:
     logger.error(f"Failed to load YOLO model: {e}")
     model = None
 
-# Session-based professional detectors
-session_detectors: Dict[int, ProfessionalObjectDetector] = {}
+# Session-based detectors
+session_detectors: Dict[int, ObjectDetector] = {}
 
 # Pydantic models
 class ObjectDetectionRequest(BaseModel):
@@ -78,15 +78,11 @@ async def detect_objects(request: ObjectDetectionRequest):
         if model is None:
             raise HTTPException(status_code=503, detail="YOLO model not available")
         
-        # Get or create professional detector for this session
+        # Initialize detector for session
         if session_id not in session_detectors:
-            session_detectors[session_id] = ProfessionalObjectDetector(
+            session_detectors[session_id] = ObjectDetector(
                 model=model,
-                input_size=960,  # High resolution for small objects
-                frame_buffer_size=15,
-                min_frames_for_detection=8,
-                confidence_threshold=0.4, # Lower for better recall on small objects
-                persistence_threshold=1.5
+                input_size=640
             )
         
         detector = session_detectors[session_id]

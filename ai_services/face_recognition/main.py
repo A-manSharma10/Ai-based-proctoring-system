@@ -8,18 +8,18 @@ import base64
 import time
 import logging
 from typing import List, Optional, Dict, Any
-from professional_face_detector import ProfessionalFaceDetector
-from professional_gaze_tracker import ProfessionalGazeTracker
+from professional_face_detector import FaceDetector
+from professional_gaze_tracker import GazeTracker
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Professional Face Recognition Service", version="2.0.0")
+app = FastAPI(title="Face Recognition Service", version="1.0.0")
 
-# Session-based professional detectors
-session_face_detectors: Dict[int, ProfessionalFaceDetector] = {}
-session_gaze_trackers: Dict[int, ProfessionalGazeTracker] = {}
+# Session-based detectors
+session_face_detectors: Dict[int, FaceDetector] = {}
+session_gaze_trackers: Dict[int, GazeTracker] = {}
 
 # Pydantic models
 class FaceRegistrationRequest(BaseModel):
@@ -144,20 +144,20 @@ async def verify_face(request: FaceVerificationRequest):
 
 @app.post("/analyze", response_model=FaceAnalysisResponse)
 async def analyze_face(request: FaceAnalysisRequest):
-    """Analyze face with professional tracking and gaze analysis"""
+    """Analyze face presence and gaze direction"""
     try:
         start_time = time.time()
         session_id = request.session_id
         
         # Initialize detectors for session
         if session_id not in session_face_detectors:
-            session_face_detectors[session_id] = ProfessionalFaceDetector(
+            session_face_detectors[session_id] = FaceDetector(
                 no_face_threshold=3.0,
                 multiple_face_threshold=1.0
             )
         if session_id not in session_gaze_trackers:
-            session_gaze_trackers[session_id] = ProfessionalGazeTracker(
-                looking_away_threshold=4.0
+            session_gaze_trackers[session_id] = GazeTracker(
+                looking_away_threshold=2.0
             )
             
         face_detector = session_face_detectors[session_id]

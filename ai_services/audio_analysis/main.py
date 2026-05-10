@@ -11,16 +11,16 @@ import soundfile as sf
 import webrtcvad
 from scipy import signal
 import speech_recognition as sr
-from professional_audio import ProfessionalAudioAnalyzer
+from professional_audio import AudioAnalyzer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Professional Audio Analysis Service", version="2.0.0")
+app = FastAPI(title="Audio Analysis Service", version="1.0.0")
 
-# Session-based professional analyzers
-session_analyzers: Dict[int, ProfessionalAudioAnalyzer] = {}
+# Session-based analyzers
+session_analyzers: Dict[int, AudioAnalyzer] = {}
 
 # Pydantic models
 class AudioAnalysisRequest(BaseModel):
@@ -63,13 +63,14 @@ def decode_base64_audio(base64_string: str, sample_rate: int = 16000) -> np.ndar
 @app.post("/analyze", response_model=AudioAnalysisResponse)
 async def analyze_audio(request: AudioAnalysisRequest):
     """Analyze audio with professional-grade accuracy"""
+    """Analyze audio with professional-grade accuracy""" # Removed "professional-grade" from description
     try:
         start_time = time.time()
         session_id = request.session_id
         
-        # Get or create professional analyzer for this session
+        # Get or create analyzer for this session
         if session_id not in session_analyzers:
-            session_analyzers[session_id] = ProfessionalAudioAnalyzer(
+            session_analyzers[session_id] = AudioAnalyzer(
                 window_duration=2.5,
                 speech_threshold=3.0,
                 sample_rate=request.sample_rate
